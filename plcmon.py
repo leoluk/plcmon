@@ -35,13 +35,13 @@ class RPCServerThread(threading.Thread):
         self.server.register_multicall_functions()
 
     def register_module(self, name):
-        module = __import__('rpcmodules.'+name)
+        module = getattr(__import__('rpcmodules.'+name), name)
 
-        if not hasattr(module, 'rpc_register'):
-            self.logger.error("RPC module %s has no entry point", name)
-        else:
+        try:
             module.rpc_register(self.server, self.config)
             self.logger.info("Registered RPC module %s" % name)
+        except AttributeError: 
+            self.logger.error("RPC module %s has no entry point", name)
 
     def run(self):
         self.logger.info("Entering server loop...")
