@@ -81,7 +81,9 @@ class NotificationReceiver(DatagramReceiver):
             packet = ord(packet)
 
             self._handle_packet(packet, 0xF0, MAP_NOTIFY_F0)
-            self._handle_packet(packet, 0x0F, MAP_NOTIFY_0F)
+
+            if not packet in REDUNDANT:
+                self._handle_packet(packet, 0x0F, MAP_NOTIFY_0F)
 
 
 def main():

@@ -14,7 +14,7 @@ from utils.datagram_constants import *
 
 MESSAGES = {
     EVT_SYSTEM_ALARM: ('Alarmanlage', 'Alarm ausgelöst', 2),
-    EVT_SYSTEM_RESET: ('Alarmanlage', 'Alarm zurückgesetzt', 1),
+    EVT_SYSTEM_RESET: ('Alarmanlage', 'Alarmanlage zurückgesetzt und unscharf geschaltet', 1),
     EVT_SYSTEM_LIVE: ('Alarmanlage', 'Alarmanlage scharf geschaltet', 0),
     EVT_SYSTEM_DISABLED: ('Alarmanlage', 'Alarmanlage unscharf geschaltet', 0),
 }

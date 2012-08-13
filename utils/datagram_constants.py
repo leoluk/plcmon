@@ -20,6 +20,8 @@ EVENTS = {
     EVT_SYSTEM_RESET: "Alarm reset",
 }
 
+REDUNDANT = [0xEF, 0xF1]
+
 MAP_NOTIFY_0F = {
     0x01: EVT_SYSTEM_LIVE,
     0x0F: EVT_SYSTEM_DISABLED,
