@@ -8,6 +8,7 @@
 import sys, os
 import threading
 import time
+import signal
 import logging
 import SocketServer
 import json
@@ -85,8 +86,13 @@ def main():
 
         notify_dispatcher.nma.notify("PLCMON", "Dienst gestartet", priority=-1)
 
-
-
+    while True:
+        try:
+            time.sleep(1)
+        except KeyboardInterrupt:
+            logger.info("Shutting down...")
+            # TODO: stop threads nicely
+            os.kill(os.getpid(), signal.SIGKILL)            
 
 if __name__ == '__main__':
     main()
