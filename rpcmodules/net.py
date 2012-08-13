@@ -11,7 +11,7 @@
 
 from utils import netscan, netstate
 
-def register_rpc(server, config):
+def rpc_register(server, config):
     server.register_function(netscan.ping_sweep)
     server.register_function(netstate.link_status)
     server.register_function(netstate.last_change)
