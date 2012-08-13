@@ -9,6 +9,7 @@ import sys, os
 import thread
 import time
 import logging
+import threading
 
 from utils import s7comm
 
@@ -43,7 +44,9 @@ def rpc_register(server, config):
 
     plc = s7comm.S7WebComm(config['sps_ip'])
 
+    logger.info("Starting login check thread...")
     checker = CheckerThread(plc, config['sps_password'])
+    checker.start()
 
     server.register_function(plc.read_value, 'sps_read_value')
     server.register_function(plc.read_values, 'sps_read_values')
