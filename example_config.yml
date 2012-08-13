@@ -1,0 +1,17 @@
+{
+    "nma_keys": [
+        "13cd83b984c06e6a9bf43c2f3810ecf51b75cdb6655d3056",
+        "10881eeeb4cc62e05ff4bdcbcfdfe5ca81a0b00c9ddfe74c"
+    ],
+
+    "sps_ip": "sps.dk0fr",
+    "sps_password": "...",
+
+    "rpc_port": 7878,
+
+    "rpc_module_s7web": false,
+    "rpc_module_net": false,
+    "rpc_module_state": false,
+
+    "module_notify": true
+}
