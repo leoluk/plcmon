@@ -44,7 +44,8 @@ class NMAProvider(object):
             raise APIKeyError("None of the keys provided are valid")
 
     def _verify_key(self, key):
-        req = self.session.post(URL_VERIFY, data=dict(apikey=key))
+        req = self.session.post(URL_VERIFY, data=dict(apikey=key), 
+                                prefetch=True)
 
         if req.status_code == 200:
             return True
@@ -72,7 +73,7 @@ class NMAProvider(object):
         if url:
             params['url'] = url
 
-        req = self.session.post(URL_NOTIFY, data=params)
+        req = self.session.post(URL_NOTIFY, data=params, prefetch=True)
 
         if req.status_code == 200:
             return True
