@@ -86,6 +86,20 @@ class NotificationReceiver(DatagramReceiver):
                 self._handle_packet(packet, 0x0F, MAP_NOTIFY_0F)
 
 
+class DebugReceiver(DatagramReceiver):
+    def __init__(self, packet_len, port, bind="0.0.0.0"):
+        DatagramReceiver.__init__(self, port, bind)
+        self.logger = logging.getLogger("datagram.receiver.debug")
+        self.hist = []
+        self.packet_len = packet_len
+
+    def run(self):
+        for packet in DatagramReceiver.run(self, 1):
+            self.hist.append(packet)
+            self.logger.debug("Received packet on port %d, %d bytes: %X",
+                              self.sock.getsockname()[1], self.packet_len, packet)
+
+
 def main():
     logging.basicConfig(stream=sys.stdout,
                         format="%(levelname)s - %(name)s -> %(message)s",
