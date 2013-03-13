@@ -28,6 +28,7 @@ class NMAProvider(object):
         self.keys = keys
         self.logger = logging.getLogger("nma")
         self.session = requests.session()
+        self.session.stream = False
 
         valid_keys = []
 
@@ -44,8 +45,7 @@ class NMAProvider(object):
             raise APIKeyError("None of the keys provided are valid")
 
     def _verify_key(self, key):
-        req = self.session.post(URL_VERIFY, data=dict(apikey=key), 
-                                prefetch=True)
+        req = self.session.post(URL_VERIFY, data=dict(apikey=key))
 
         if req.status_code == 200:
             return True
@@ -73,7 +73,7 @@ class NMAProvider(object):
         if url:
             params['url'] = url
 
-        req = self.session.post(URL_NOTIFY, data=params, prefetch=True)
+        req = self.session.post(URL_NOTIFY, data=params)
 
         if req.status_code == 200:
             return True

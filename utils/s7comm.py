@@ -148,6 +148,7 @@ class S7WebComm(requests.Session):
         self.ip = sps_ip
         self.secure = secure
         self._logged_in = False
+        self.stream = False
 
         if self._load_cookie():
             self.ireq = self.get(self._build_url(URL_MAIN))
@@ -183,7 +184,7 @@ class S7WebComm(requests.Session):
 
     def login(self, password, username='admin'):
         req = self.post(self._build_url(URL_LOGIN),
-                 data={'Login': username, 'Password': password,}, prefetch=True)
+                 data={'Login': username, 'Password': password,})
 
         if COOKIE_NAME in req.cookies:
             self._logged_in = True
@@ -276,7 +277,7 @@ class S7WebComm(requests.Session):
             data['gobutton_t%d' % (n+1)] = 'Go'
 
             req = self.get(self._build_url(URL_VARSET),
-                           params=data, prefetch=True, allow_redirects=False)
+                           params=data, allow_redirects=False)
 
         if check:
             raise NotImplementedError
