@@ -41,7 +41,7 @@ class RPCServerThread(threading.Thread):
         try:
             module.rpc_register(self.server, self.config)
             self.logger.info("Registered RPC module %s" % name)
-        except AttributeError: 
+        except AttributeError:
             self.logger.error("RPC module %s has no entry point", name)
 
     def run(self):
@@ -81,10 +81,12 @@ def main():
 
         logger.info("Starting notification dispatcher...")
 
-        notify_dispatcher = notify.NotificationThread(listen_notify.messages, config)
+        notify_dispatcher = notify.NotificationThread(listen_notify.messages,
+                                                      config)
         notify_dispatcher.start()
 
-        notify_dispatcher.nma.notify("PLCMON", "Dienst gestartet", priority=-1)
+        notify_dispatcher.send_message("PLCMON", "Dienst gestartet",
+                                       priority=-1)
 
     while True:
         try:
@@ -92,7 +94,7 @@ def main():
         except KeyboardInterrupt:
             logger.info("Shutting down...")
             # TODO: stop threads nicely
-            os.kill(os.getpid(), signal.SIGKILL)            
+            os.kill(os.getpid(), signal.SIGKILL)
 
 if __name__ == '__main__':
     main()
