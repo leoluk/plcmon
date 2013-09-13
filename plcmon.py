@@ -88,6 +88,7 @@ def main():
         notify_dispatcher.send_message("PLCMON", "Dienst gestartet",
                                        priority=-1)
 
+
     while True:
         try:
             time.sleep(1)
