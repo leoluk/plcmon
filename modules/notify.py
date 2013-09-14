@@ -5,6 +5,8 @@
 #   All rights reserved.
 #
 
+from __future__ import unicode_literals
+
 import threading
 import logging
 import time
@@ -17,10 +19,10 @@ from utils.datagram_constants import *
 
 
 MESSAGES = {
-    EVT_SYSTEM_ALARM: ('Alarmanlage', 'Alarm ausgelöst', 2),
-    EVT_SYSTEM_RESET: ('Alarmanlage', 'Alarmanlage zurückgesetzt und unscharf geschaltet', 1),
-    EVT_SYSTEM_LIVE: ('Alarmanlage', 'Alarmanlage scharf geschaltet', 0),
-    EVT_SYSTEM_DISABLED: ('Alarmanlage', 'Alarmanlage unscharf geschaltet', 0),
+    EVT_SYSTEM_ALARM: ('Clubheim', 'Alarm ausgelöst', 2),
+    EVT_SYSTEM_RESET: ('Clubheim', 'Alarmanlage zurückgesetzt und unscharf geschaltet', 1),
+    EVT_SYSTEM_LIVE: ('Clubheim', 'Alarmanlage scharf geschaltet', 0),
+    EVT_SYSTEM_DISABLED: ('Clubheim', 'Alarmanlage unscharf geschaltet', 0),
 }
 
 
@@ -46,6 +48,7 @@ class NotificationThread(threading.Thread):
                                                     priority, self.config['app_name'], self.config['label']))
         self.db_conn.commit()
 
+    #noinspection PyArgumentList
     def __init__(self, inqueue, config):
         threading.Thread.__init__(self)
         self.inqueue = inqueue
@@ -60,7 +63,7 @@ class NotificationThread(threading.Thread):
         self.m365 = messaging365.M365Provider(*self.config['m365_login'])
 
         if 'db_file' in self.config:
-            self.db_conn = sqlite3.connect(self.config['db_file'])
+            self.db_conn = sqlite3.connect(self.config['db_file'], check_same_thread=False)
             self.db_cursor = self.db_conn.cursor()
             self.make_db()
 
@@ -68,15 +71,15 @@ class NotificationThread(threading.Thread):
     def send_message(self, event, description, priority):
 
         if priority == 2:
-            sound = "siren"
+            sound = "alien"
         else:
             sound = None
 
         # Send PushOver
         for user in self.chump_users:
-            user.send_message(description.decode('utf8'),
+            user.send_message(description,
                               priority=priority, sound=sound,
-                              title=self.config['label'])
+                              title=event)
 
         message = "[%s, %s] %s: %s" % (self.config['label'],
                                        time.strftime("%d.%m.%y %H:%M"),
@@ -102,8 +105,8 @@ class NotificationThread(threading.Thread):
                 return
 
             try:
-                self.send_message(event, description, priority=priority)
                 self.log_event(message, event, description, priority)
+                self.send_message(event, description, priority=priority)
             except RuntimeError:
                 self.logger.exception("Couldn't dispatch message"
                                       "to mobile devices")
