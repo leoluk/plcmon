@@ -5,7 +5,8 @@
 #   All rights reserved.
 #
 
-import sys, os
+import sys
+import os
 import threading
 import time
 import signal
@@ -13,6 +14,7 @@ import logging
 import SocketServer
 import json
 from SimpleXMLRPCServer import SimpleXMLRPCServer,SimpleXMLRPCRequestHandler
+
 
 # Threaded mix-in
 class AsyncXMLRPCServer(SocketServer.ThreadingMixIn,SimpleXMLRPCServer): pass
@@ -85,9 +87,9 @@ def main():
                                                       config)
         notify_dispatcher.start()
 
-        notify_dispatcher.send_message("PLCMON", "Dienst gestartet",
+        notify_dispatcher.send_message(config['app_name'], "Dienst gestartet",
                                        priority=-1)
-
+        notify_dispatcher.log_event(None, config['app_name'], "Dienst gestartet", 0)
 
     while True:
         try:
