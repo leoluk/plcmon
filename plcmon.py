@@ -87,9 +87,10 @@ def main():
                                                       config)
         notify_dispatcher.start()
 
-        notify_dispatcher.send_message(config['app_name'], "Dienst gestartet",
-                                       priority=-1)
-        notify_dispatcher.log_event(None, config['app_name'], "Dienst gestartet", 0)
+        if config['startup_message']:
+            notify_dispatcher.send_message(config['app_name'], "Dienst gestartet",
+                                           priority=-1)
+            notify_dispatcher.log_event(None, config['app_name'], "Dienst gestartet", 0)
 
     while True:
         try:
