@@ -90,6 +90,12 @@ class NotificationThread(threading.Thread):
             self.m365.send_message(number, self.config['label'],
                                    message, msg_type="ussd")
 
+        if priority > 0:
+            for number in self.config['emergency_phone_numbers']:
+                # Send additional emergency flash SMS
+                self.m365.send_message(number, self.config['label'],
+                                       message, msg_type="flash")
+
         # Send NotifyMyAndroid
         self.nma.notify(event, description, priority=priority,
                         application=self.config['label'])
