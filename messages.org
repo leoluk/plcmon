@@ -1,0 +1,86 @@
+
+* SPS
+
+** Definiertes Interface
+
+*** Interne Adressierung
+
+**** Eingänge
+
+| Bit | Beschreibung          |
+|-----+-----------------------|
+| 0.0 | Taster Werkstatt      |
+| 0.1 | Taster UKW            |
+| 0.2 | Taster KW             |
+| 0.3 | Taster Flurlicht      |
+| 0.4 | Taster Außenlicht     |
+| 0.5 | Alarmanlage unscharf  |
+| 0.6 | Alarmanlage ausgelöst |
+
+**** Ausgänge
+
+| Bit | Beschreibung                            |
+|-----+-----------------------------------------|
+| 0.0 | Relais Werkstatt                        |
+| 0.1 | Relais UKW                              |
+| 0.2 | Relais KW                               |
+| 0.3 | Relais Zentralstrom                     |
+| 0.4 | Relais Flurlicht                        |
+| 0.5 | Relais Außenlicht                       |
+| 0.6 | Steuerkontakt Heizung (nicht verbunden) |
+
+**** Steuerungsbaustein
+
+ - Adressierungsbeispiel: =DB8.DBX0.0=
+ - Die mit "X" markierten Werte stellen keinen Zustand dar, sondern lösen beim Setzen auf 1 die beschriebene Aktion aus.
+
+| Bit | Zustand                                                      |   |
+|-----+--------------------------------------------------------------+---|
+| 0.0 | Status Dauerlicht                                            |   |
+| 0.1 | Flurlicht-Timer zurücksetzen                                 | X |
+| 0.2 | Flurlicht-Taster simulieren                                  | X |
+| 0.3 | Flurlicht-Haltemerker umschalten (langes Drücken simulieren) | X |
+| 0.4 | Außenlichtkopplung aktiv                                     |   |
+| 0.5 | UDP-Datentelegrammversand aktiv                              |   |
+
+
+*** Netzwerkkommunikation
+
+Ziel-IP der UDP-Pakete ist hardcoded in der SPS.
+
+**** Datentelegramm
+
+ - Ziel-Port: *7002/udp* (plcmon-status)
+ - 2 Bytes (1 Word) → 16 Bits, Low Endian
+
+Ein Telegramm enthält immer alle Zustandsbits.
+
+| Bit | Statuswert               |
+|-----+--------------------------|
+|   0 | Relais Werkstatt         |
+|   1 | Relais UKW               |
+|   2 | Relais KW                |
+|   3 | Relais Zentralstrom      |
+|   4 | Relais Flurlicht         |
+|   5 | Status Dauerlicht        |
+|   6 | Außenlichtkopplung aktiv |
+|   7 | Außenlichtkopplung       |
+|   8 | Flurlicht manuell        |
+|   9 | Relais Außenlicht        |
+|  10 | Alarmanlage unscharf     |
+|  11 | Alarmanlage ausgelöst    |
+
+**** Meldungstelegramm
+
+ - Ziel-Port: *7001/udp* (plcmon-notify)
+ - 1 Byte
+
+Ein Telegramm enthält eine OR-Kombination folgender Bitmasken:
+
+| Maske | Zustand                      |
+|-------+------------------------------|
+|  0x01 | Alarmanlage aktiv und scharf |
+|  0x0F | Alarmanlage unscharf         |
+|  0xF0 | Alarm                        |
+|  0xE0 | Alarm zurückgesetzt          |
+
