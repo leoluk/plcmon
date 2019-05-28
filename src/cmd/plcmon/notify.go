@@ -6,8 +6,8 @@ import (
 	"net"
 )
 
-
 const (
+	messageDebug     = "Testnachricht"
 	messageArmed     = "Alarmanlage scharf"
 	messageDisarmed  = "Alarmanlage unscharf"
 	messageTriggered = "Alarm ausgelöst"
@@ -17,6 +17,10 @@ const (
 
 func formatPushMessage(message uint8) (pushMessage string, urgent bool) {
 	switch {
+	// non-standard message for debugging
+	case message == 0x00:
+		glog.Info("notify: debug")
+		pushMessage = messageDebug
 	case message == 0x01: // armed
 		glog.Info("notify: alarm armed")
 		pushMessage = messageArmed
