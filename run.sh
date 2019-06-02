@@ -6,7 +6,7 @@ set -eo pipefail
 
 HOST=dk0fr-pf
 
-ARGS="$PLCMON_ARGS $@ -vmodule notify=2 -vmodule push=1"
+ARGS="$PLCMON_ARGS $@ -vmodule notify=2 -vmodule push=1 -log_file /tmp/plcmon.log -logtostderr false"
 
 # Cross-compile binary
 GOOS=freebsd GO386=387 GOARCH=386 go build -ldflags="-s -w" github.com/leoluk/plcmon/src/cmd/plcmon

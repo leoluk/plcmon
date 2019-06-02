@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
-	"github.com/golang/glog"
 	"github.com/gregdel/pushover"
+	"k8s.io/klog"
 )
 
 var (
@@ -13,9 +13,9 @@ var (
 
 func validatePushFlags() {
 	if *pushoverKey == "" {
-		glog.Fatal("no Pushover key specified")
+		klog.Fatal("no Pushover key specified")
 	} else if *pushoverAddr == "" {
-		glog.Fatal("Pushover key specified, but no address")
+		klog.Fatal("Pushover key specified, but no address")
 	}
 }
 
@@ -24,7 +24,7 @@ func sendPushMessage(body string, urgent bool) {
 	pRecipient := pushover.NewRecipient(*pushoverAddr)
 
 	// Pushover
-	go func(){
+	go func() {
 		m := pushover.NewMessage(body)
 
 		if urgent {
@@ -34,9 +34,9 @@ func sendPushMessage(body string, urgent bool) {
 
 		r, err := pApp.SendMessage(m, pRecipient)
 		if err != nil {
-			glog.Error("failed to send Pushover message:", err)
+			klog.Error("failed to send Pushover message:", err)
 		}
 
-		glog.V(1).Infof("Pushover response %s", r)
+		klog.V(1).Infof("Pushover response %s", r)
 	}()
 }

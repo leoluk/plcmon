@@ -2,9 +2,9 @@ package main
 
 import (
 	"encoding/binary"
-	"github.com/golang/glog"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
+	"k8s.io/klog"
 	"net"
 	"reflect"
 )
@@ -67,10 +67,10 @@ func boolToFloat(b bool) float64 {
 func statusServer(addr string) {
 	s, err := net.ListenPacket("udp", addr)
 	if err != nil {
-		glog.Fatal(err)
+		klog.Fatal(err)
 	}
 
-	glog.Infof("status server listening on %s", addr)
+	klog.Infof("status server listening on %s", addr)
 
 	defer s.Close()
 
@@ -79,20 +79,20 @@ func statusServer(addr string) {
 	for {
 		n, addr, err := s.ReadFrom(buffer)
 		if err != nil {
-			glog.Errorf("failed to receive packet: %v", err)
+			klog.Errorf("failed to receive packet: %v", err)
 		}
 
-		glog.V(2).Infof("recv: bytes=%d from=%s, buf=%x\n",
+		klog.V(2).Infof("recv: bytes=%d from=%s, buf=%x\n",
 			n, addr.String(), string(buffer[:n]))
 
 		if n != 2 {
-			glog.Warning("ignoring invalid packet")
+			klog.Warning("ignoring invalid packet")
 			continue
 		}
 
 		data := processStatusPacket(buffer[:n])
 
-		glog.V(2).Infof("data: %+v", data)
+		klog.V(2).Infof("data: %+v", data)
 
 		// Set metrics
 		statusMessagesProcessed.Inc()
@@ -100,11 +100,11 @@ func statusServer(addr string) {
 		{
 			v := reflect.ValueOf(data)
 			for i := 0; i < v.NumField(); i++ {
-				 sensorStatus.WithLabelValues(
-				 	v.Type().Field(i).Name).Set(boolToFloat(v.Field(i).Bool()))
+				sensorStatus.WithLabelValues(
+					v.Type().Field(i).Name).Set(boolToFloat(v.Field(i).Bool()))
 			}
 		}
 
-		glog.Flush()
+		klog.Flush()
 	}
 }
