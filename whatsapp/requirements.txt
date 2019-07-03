@@ -1,0 +1,3 @@
+Flask==1.0.3
+Flask-Limiter==1.0.1
+yowsup==3.2.3
