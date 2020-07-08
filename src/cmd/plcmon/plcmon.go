@@ -19,6 +19,7 @@ func main() {
 	klog.InitFlags(nil)
 	flag.Parse()
 	validatePushFlags()
+	validateTelegramArgs()
 
 	klog.CopyStandardLogTo("INFO")
 

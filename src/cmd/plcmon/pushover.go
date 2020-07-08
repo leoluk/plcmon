@@ -19,7 +19,7 @@ func validatePushFlags() {
 	}
 }
 
-func sendPushMessage(body string, urgent bool) {
+func sendPushoverMessage(body string, urgent bool) {
 	pApp := pushover.New(*pushoverKey)
 	pRecipient := pushover.NewRecipient(*pushoverAddr)
 

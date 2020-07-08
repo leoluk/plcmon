@@ -44,7 +44,13 @@ func formatPushMessage(message uint8) (pushMessage string, urgent bool) {
 func processNotify(buffer []byte) {
 	b := uint8(buffer[0])
 
-	sendPushMessage(formatPushMessage(b))
+	message, urgent := formatPushMessage(b)
+
+	sendPushoverMessage(message, urgent)
+
+	if *telegramKey != "" {
+		sendTelegramMessage(message)
+	}
 }
 
 func notifyServer(addr string) {
