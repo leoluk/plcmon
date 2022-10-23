@@ -21,7 +21,7 @@ var (
 
 func validateTelegramArgs() {
 	if *telegramKey != "" && *telegramGroup == "" {
-		klog.Fatal("Please specify -telegramGroup with -telegramKey")
+		klog.Exit("Please specify -telegramGroup with -telegramKey")
 	}
 }
 

@@ -1,4 +1,4 @@
 /plcmon
 .idea
 *.swp
-env.sh
+plcmon

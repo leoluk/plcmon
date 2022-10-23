@@ -13,9 +13,9 @@ var (
 
 func validatePushFlags() {
 	if *pushoverKey == "" {
-		klog.Fatal("no Pushover key specified")
+		klog.Exit("no Pushover key specified")
 	} else if *pushoverAddr == "" {
-		klog.Fatal("Pushover key specified, but no address")
+		klog.Exit("Pushover key specified, but no address")
 	}
 }
 
