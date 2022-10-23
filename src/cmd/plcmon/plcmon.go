@@ -7,6 +7,7 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"sync"
+	"time"
 )
 
 var (
@@ -33,13 +34,26 @@ func main() {
 	wg := sync.WaitGroup{}
 	wg.Add(2)
 
+	notifyC := make(chan mqttStatus)
+
 	go func() {
 		statusServer(*statusAddr)
 		wg.Done()
 	}()
+
 	go func() {
-		notifyServer(*notifyAddr)
+		notifyServer(*notifyAddr, notifyC)
 		wg.Done()
+	}()
+
+	go func() {
+		for {
+			klog.Infof("connecting to mqtt server %s", *flagMqttAddr)
+			if err := mqttService(notifyC); err != nil {
+				klog.Errorf("mqttService: %v", err)
+			}
+			time.Sleep(5 * time.Second)
+		}
 	}()
 
 	wg.Wait()

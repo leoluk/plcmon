@@ -15,7 +15,7 @@ const (
 	messageInvalid   = "Ungültiger Zustand der State Machine: %x"
 )
 
-func formatPushMessage(message uint8) (pushMessage string, urgent bool) {
+func formatPushMessage(message uint8) (pushMessage string, urgent bool, status mqttStatus) {
 	switch {
 	case message == 0x00: // non-standard message for debugging
 		klog.Info("notify: debug")
@@ -23,16 +23,20 @@ func formatPushMessage(message uint8) (pushMessage string, urgent bool) {
 	case message == 0x01: // armed
 		klog.Info("notify: alarm armed")
 		pushMessage = messageArmed
+		status = mqttStatus{Armed: true, Triggered: false}
 	case message == 0x0f: // disarmed
 		klog.Info("notify: alarm disarmed")
 		pushMessage = messageDisarmed
+		status = mqttStatus{Armed: false, Triggered: false}
 	case message == 0xf1: // alarm || armed
 		klog.Info("notify: alarm triggered")
 		pushMessage = messageTriggered
 		urgent = true
+		status = mqttStatus{Armed: true, Triggered: true}
 	case message == 0xef: // reset || disarmed
 		klog.Info("notify: alarm reset")
 		pushMessage = messageReset
+		status = mqttStatus{Armed: false, Triggered: false}
 	default:
 		klog.Errorf("notify: invalid state machine: %x", message)
 		pushMessage = fmt.Sprintf(messageInvalid, message)
@@ -41,19 +45,23 @@ func formatPushMessage(message uint8) (pushMessage string, urgent bool) {
 	return
 }
 
-func processNotify(buffer []byte) {
+func processNotify(buffer []byte, c chan mqttStatus) {
 	b := uint8(buffer[0])
 
-	message, urgent := formatPushMessage(b)
+	message, urgent, status := formatPushMessage(b)
 
-	sendPushoverMessage(message, urgent)
+	go sendPushoverMessage(message, urgent)
 
 	if *telegramKey != "" {
-		sendTelegramMessage(message)
+		go sendTelegramMessage(message)
+	}
+
+	select {
+	case c <- status:
 	}
 }
 
-func notifyServer(addr string) {
+func notifyServer(addr string, c chan mqttStatus) {
 	s, err := net.ListenPacket("udp", addr)
 	if err != nil {
 		klog.Fatal(err)
@@ -79,7 +87,7 @@ func notifyServer(addr string) {
 			continue
 		}
 
-		processNotify(buffer[:n])
+		processNotify(buffer[:n], c)
 
 		klog.Flush()
 	}
