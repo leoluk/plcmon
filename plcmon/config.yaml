@@ -1,0 +1,24 @@
+name: PLCMON
+description: PLCMON
+version: "1.0.7"
+slug: "plcmon"
+init: false
+arch:
+  - amd64
+host_network: true  # required for low-level UDP semantics
+options:
+  pushoverKey: ""
+  pushoverAddr: ""
+  telegramKey: ""
+  telegramGroup: ""
+  mqttAddr: ""
+  mqttUser: ""
+  mqttPass: ""
+schema:
+  pushoverKey: str
+  pushoverAddr: str
+  telegramKey: str
+  telegramGroup: str
+  mqttAddr: str
+  mqttUser: str
+  mqttPass: str

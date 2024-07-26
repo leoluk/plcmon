@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/leoluk/plcmon/src/cmd/plcmon/s7"
+	"github.com/leoluk/plcmon/plcmon/src/cmd/plcmon/s7"
 	"k8s.io/klog/v2"
 )
 
