@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"k8s.io/klog"
+	"k8s.io/klog/v2"
 	"net/http"
 	_ "net/http/pprof"
 	"sync"

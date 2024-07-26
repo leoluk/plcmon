@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/leoluk/plcmon/src/cmd/plcmon/s7"
-	"k8s.io/klog"
+	"k8s.io/klog/v2"
 )
 
 func init() {

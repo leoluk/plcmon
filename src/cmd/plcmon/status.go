@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	"k8s.io/klog"
+	"k8s.io/klog/v2"
 	"net"
 	"reflect"
 )

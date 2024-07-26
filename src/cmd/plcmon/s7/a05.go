@@ -2,7 +2,7 @@ package s7
 
 import (
 	"github.com/robinson/gos7"
-	"k8s.io/klog"
+	"k8s.io/klog/v2"
 	"log"
 	"time"
 )

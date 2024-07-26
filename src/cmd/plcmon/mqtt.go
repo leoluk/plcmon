@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"k8s.io/klog"
+	"k8s.io/klog/v2"
 	"log"
 )
 
