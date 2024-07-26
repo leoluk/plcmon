@@ -1,0 +1,21 @@
+name: PLCMON
+description: PLCMON
+version: "1.0.0"
+slug: "plcmon"
+init: false
+arch:
+  - amd64
+ports:
+  6060/tcp: 6060
+  7001/udp: 7001
+  7002/tcp: 7002
+options:
+  pushoverKey: ""
+  pushoverAddr: ""
+  telegramKey: ""
+  telegramGroup: ""
+schema:
+  pushoverKey: str
+  pushoverAddr: str
+  telegramKey: str
+  telegramGroup: str
